@@ -1,0 +1,139 @@
+https://codeforces.com/contest/1433/problem/F
+
+#include<bits/stdc++.h>
+#include<algorithm>
+
+#define IOS ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define F first
+#define S second
+#define vi vector
+#define FOR(i,n) for(int i=0;i<n;i++)
+#define FORE(i,a,b) for(int i=a;i<=b;i++)
+#define FORR(i,a,b) for(int i=a;i>=b;i--)
+#define pb push_back
+#define ll long long int
+#define db double
+#define all(v) v.begin(),v.end()
+#define inf 10000000000
+#define MIN -1e18
+
+
+using namespace std;
+
+/*
+
+ll expo(ll n){
+    ll t;
+    if(n==0)return 1;
+    else if(n==1) return 2;
+    t=expo(n/2);
+    if(n%2){
+        return t*t*2;
+    }
+    else return t*t;
+}
+
+//ffrom geek for geek
+ll exponentMod(ll A, ll B, ll C)  
+{  
+    if (A == 0)  
+        return 0;  
+    if (B == 0)  
+        return 1;  
+    ll y;  
+    if (B % 2 == 0) {  
+        y = exponentMod(A, B / 2, C);  
+        y = (y * y) % C;  
+    }  
+    else {  
+        y = A % C;  
+        y = (y * exponentMod(A, B - 1, C) % C) % C;  
+    }  
+  
+    return (ll)((y + C) % C);  
+}
+
+*/
+/*
+class dsu{
+public:    
+vi<ll> v;
+
+
+void init(ll n){
+    v.assign(n+1,-1);
+}
+
+ 
+ll dsufind(ll x){
+    if(v[x]<0){
+        return x;
+    }
+    v[x]=dsufind(v[x]);
+    return v[x];
+}
+ 
+void dsujoin(ll x,ll y){
+    x=dsufind(x);
+    y=dsufind(y);
+    
+    if(x==y)
+    return;
+    if(v[x]>v[y])swap(x,y);
+    v[y]+=v[x];
+    v[x]=y;
+}
+
+};
+*/
+ll n,m,k;
+ll arr[71][71];
+ll dp[71][71][71][36];
+
+
+ll solve(int i,int j,int mod,int left){
+    if(i==n && (j==m || !left)){
+        return (mod==0?0:MIN); 
+    }
+    if(j==m || !left){
+        return dp[i][j][mod][left]=solve(i+1,0,mod,m/2);
+    }
+    if(dp[i][j][mod][left]!=-1){
+        return dp[i][j][mod][left];
+    }
+
+    //cout<<i<<" "<<j<<"\n";
+    ll ans=MIN,MOD=arr[i][j]%k;
+
+    if(MOD<mod){
+        ans=max(ans,arr[i][j]+solve(i,j+1,mod-MOD,left-1));
+    }
+    else if(MOD>mod){
+        ans=max(ans,arr[i][j]+solve(i,j+1,k-(MOD-mod),left-1));
+    }
+    else{
+        ans=max(ans,arr[i][j]+solve(i,j+1,0,left-1));
+    }
+
+    ans=max(ans,solve(i,j+1,mod,left));
+
+    return dp[i][j][mod][left]=ans;
+}
+
+
+
+int main(){
+    IOS;
+    ll t;
+    t=1;
+   //cin>>t;
+    while(t--){
+        cin>>n>>m>>k;
+        memset(dp,-1,sizeof(dp));
+        FOR(i,n){
+            FOR(j,m)cin>>arr[i][j];
+        }
+        cout<<max((ll)0,solve(0,0,0,m/2));
+    }
+    return 0;
+} 
