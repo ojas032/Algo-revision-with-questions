@@ -1,2 +1,1 @@
-adding text to test git revery feature
 This file is made to test out git
